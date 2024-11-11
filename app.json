@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HelloWorld",
-    "slug": "expo-template-default",
+    "name": "FoodNinja",
+    "slug": "foodninja",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.muhammadyounis.foodninja"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.muhammadyounis.foodninja"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +33,18 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f98b8020-1fa1-42c0-91ad-51b1cd4daee5"
+      }
+    },
+    "owner": "muhammadyounis",
+    "updates": {
+      "url": "https://u.expo.dev/f98b8020-1fa1-42c0-91ad-51b1cd4daee5"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

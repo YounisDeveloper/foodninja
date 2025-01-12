@@ -9,7 +9,7 @@ export default function OnBoarding() {
 
   const handleNextPress = () => {
     // Navigate to the next screen (could be index or another screen)
-    router.push("../Login/login"); // Adjust this to the desired screen
+    router.push("/(auth)/SignUp/SignUp"); // Adjust this to the desired screen
   };
 
   return (

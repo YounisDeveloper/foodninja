@@ -15,8 +15,8 @@ import { PopularMenuData } from "@/constants/PopularMenuData";
 import { router } from "expo-router";
 
 const HomeScreen = () => {
-  const handleViewRest = () => router.push("ViewMore");
-  const handlePopularRest = () => router.push("Popular");
+  const handleViewRest = () => router.push("/(main)/(tabs)/(home)/ViewMore");
+  const handlePopularRest = () => router.push("/(main)/(tabs)/(home)/Popular");
 
   // Single list data with sections
   const combinedData = [
@@ -24,7 +24,7 @@ const HomeScreen = () => {
     { type: "popular", data: PopularMenuData },
   ];
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: { type: string; data: any[] } }) => {
     if (item.type === "nearest") {
       // Nearest Restaurant Section
       return (
@@ -50,7 +50,7 @@ const HomeScreen = () => {
     } else if (item.type === "popular") {
       // Popular Menu Section
       return (
-        <View>
+        <View style={{ marginBottom: 70 }}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Popular Menu</Text>
             <TouchableOpacity onPress={handlePopularRest}>
@@ -74,8 +74,14 @@ const HomeScreen = () => {
     }
   };
 
-  const NearestCardItem = ({ item, isMenu }) => (
-    <View style={styles.card1}>
+  const NearestCardItem = ({
+    item,
+    isMenu,
+  }: {
+    item: { img: string; name: string; time: string };
+    isMenu: boolean;
+  }) => (
+    <TouchableOpacity style={styles.NearestRestCard}>
       <Image source={item.img} style={styles.image} />
       <Text style={styles.title}> {item.name} </Text>
       {isMenu ? (
@@ -83,10 +89,16 @@ const HomeScreen = () => {
       ) : (
         <Text style={styles.time}> {item.time} </Text>
       )}
-    </View>
+    </TouchableOpacity>
   );
-  const PopularCardItem = ({ item, isMenu }) => (
-    <View style={styles.cardpoplar}>
+  const PopularCardItem = ({
+    item,
+    isMenu,
+  }: {
+    item: { img: string; name: string; price?: string; hotelname?: string };
+    isMenu: boolean;
+  }) => (
+    <TouchableOpacity style={styles.cardpoplar}>
       <Image source={item.img} style={styles.imagePopular} />
       <View style={styles.popularDetails}>
         <Text style={styles.titlePopular}>{item.name}</Text>
@@ -95,7 +107,7 @@ const HomeScreen = () => {
         )}
       </View>
       {isMenu && <Text style={styles.pricePopular}>{item.price}</Text>}
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -149,7 +161,7 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: "space-between",
   },
-  card1: {
+  NearestRestCard: {
     backgroundColor: "#FFF",
     borderRadius: 12,
     padding: 12,

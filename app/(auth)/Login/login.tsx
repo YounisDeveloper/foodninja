@@ -7,21 +7,55 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import CustomButton from "@/app/Components/Button";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import axios from "axios";
 const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleNextPress = () => {
-    // Navigate to the next screen (could be index or another screen)
-    router.push("../SignUp/SignUp"); // Adjust this to the desired screen
+  const handleLogin = async () => {
+    try {
+      console.log("Sending login request with:", { email, password });
+      const response = await axios.post("http://192.168.139.73:3000/login", {
+        email,
+        password,
+      });
+      console.log("User logged in successfully:", response.data);
+      Alert.alert("logged in successfully:", response.data.message);
+      // Navigate to the home screen
+      router.push("/(main)/(tabs)/(home)");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+          setError(error.response.data.message || "Request failed");
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+          setError("No response received from server");
+        } else {
+          console.error("Error setting up request:", error.message);
+          setError("Error setting up request");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        setError("An unexpected error occurred");
+      }
+    }
   };
 
   const handleForgotPassword = () => {
-    router.navigate("./ForgotPasswordScreen");
+    router.push("/(auth)/SignUp/SignUp");
+    Alert.alert("Log in successful");
   };
   return (
     <View style={styles.container}>
@@ -35,11 +69,18 @@ const LoginScreen = () => {
 
       {/* Input Fields */}
       <View style={styles.inputContainer}>
-        <TextInput placeholder="Email" style={styles.input} />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          onChangeText={setEmail}
+          value={email}
+        />
         <TextInput
           placeholder="Password"
           secureTextEntry
           style={styles.input}
+          value={password}
+          onChangeText={setPassword}
         />
       </View>
 
@@ -64,7 +105,7 @@ const LoginScreen = () => {
       </View>
 
       {/* Login Button */}
-      <CustomButton title="Login" onPress={handleNextPress} />
+      <CustomButton title="Login" onPress={handleLogin} />
     </View>
   );
 };

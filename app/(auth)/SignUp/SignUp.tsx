@@ -7,12 +7,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import CustomButton from "@/app/Components/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import axios from "axios";
 type LinearColor = {};
 const SignUpScreen = ({}: LinearColor) => {
   const [email, setEmail] = useState("");
@@ -21,14 +23,39 @@ const SignUpScreen = ({}: LinearColor) => {
   const [keepSignedIn, setKeepSignedIn] = useState(false);
   const [specialPricing, setSpecialPricing] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleNextPress = () => {
-    // Navigate to the next screen (could be index or another screen)
-    router.push("./SignUpProcess"); // Adjust this to the desired screen
+  const handleRegister = async () => {
+    try {
+      const response = await axios.post("http://192.168.139.73:3000/signup", {
+        userName: name,
+        email,
+        password,
+      });
+      console.log("User signed up successfully:", response.data);
+      router.push("/(auth)/Login/login");
+      Alert.alert("SignUp Successfully");
+    } catch (error) {
+      Alert.alert("some thing wrong");
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error);
+        if (error.response) {
+          setError(error.response.data.message || "Request failed");
+        } else if (error.request) {
+          setError("No response received from server");
+        } else {
+          setError("Error setting up request");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        setError("An unexpected error occurred");
+      }
+    }
   };
+
   const handleAlreadyAccount = () => {
-    router.navigate("../Login/login");
+    router.push("/(auth)/Login/login");
   };
   return (
     <View style={styles.container}>
@@ -119,7 +146,7 @@ const SignUpScreen = ({}: LinearColor) => {
       </View>
 
       {/* Create Account Button */}
-      <CustomButton title="Create Account" onPress={handleNextPress} />
+      <CustomButton title="Create Account" onPress={handleRegister} />
 
       {/* Already Have an Account */}
       <TouchableOpacity onPress={handleAlreadyAccount}>
